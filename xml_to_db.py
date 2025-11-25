@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 import sqlite3
 # === CONFIGURATION ===
-XML_DIR = "archiv"   # répertoire des fichiers XML
+XML_DIR = "Archiv"   # répertoire des fichiers XML
 DB_FILE = "output.db"           # fichier SQLite (modifiable)
 # ======================
 # Connexion à la base de données
@@ -30,11 +30,11 @@ for filename in os.listdir(XML_DIR):
         # (Sinon, crée une table vide sans colonnes)
         sample = root.find(".//Row") or (list(root)[0] if len(list(root)) > 0 else None)
         if sample is not None:
-            cols = [elem.tag for elem in sample]
+            cols_table = [elem.tag for elem in sample]
         else:
-            cols = []  # aucune colonne détectée
-        if cols:
-            create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([f'{c} TEXT' for c in cols])});"
+            cols_table = []  # aucune colonne détectée
+        if cols_table:
+            create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([f'{c} TEXT' for c in cols_table])});"
         else:
             # table sans colonnes explicites
             create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY AUTOINCREMENT);"
@@ -44,15 +44,29 @@ for filename in os.listdir(XML_DIR):
     # === CAS NORMAL (XML NON VIDE) ===
     # Colonnes à partir de la première ligne
     first_row = rows[0]
-    cols = [elem.tag for elem in first_row]
+    cols_table = [elem.tag for elem in first_row]
     # Création de la table si non existante
-    create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([f'{c} TEXT' for c in cols])});"
+    create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([f'{c} TEXT' for c in cols_table])});"
     cursor.execute(create_sql)
     # Insertion de chaque ligne
     for row in rows:
-        values = [row.find(c).text if row.find(c) is not None else None for c in cols]
-        placeholders = ",".join(["?"] * len(cols))
-        insert_sql = f"INSERT INTO {table_name} ({', '.join(cols)}) VALUES ({placeholders})"
+        values = []
+        cols_insert = []
+        # Traitement de chaque colonne
+        for child in row:
+            cols_insert.append(child.tag)
+            # Rajout d'une nouvelle colonne si besoin
+            if child.tag not in cols_table:
+                alter_sql = f"ALTER TABLE {table_name} ADD COLUMN {child.tag} TEXT"
+                cursor.execute(alter_sql)
+                cols_table.append(child.tag)
+            values.append(child.text)
+        placeholders = ",".join(["?"] * len(cols_insert))
+        print(len(values))
+        print('and')
+        print(len(cols_insert))
+        print(table_name)
+        insert_sql = f"INSERT INTO {table_name} ({', '.join(cols_insert)}) VALUES ({placeholders})"
         cursor.execute(insert_sql, values)
     conn.commit()
     print(f"[OK] Table '{table_name}' : {len(rows)} lignes insérées.")
