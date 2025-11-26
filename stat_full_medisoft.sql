@@ -43,7 +43,7 @@ BEGIN
                 EXECUTE format('SELECT COUNT(DISTINCT %I) FROM %I.%I', c.column_name, r.table_schema, r.table_name)
                 INTO distinct_count;
 				IF distinct_count < 30 THEN
-					EXECUTE format('SELECT DISTINCT %I AS val FROM %I.%I', c.column_name, r.table_schema, r.table_name)
+					EXECUTE format('SELECT ARRAY_AGG(DISTINCT %I::text) FROM %I.%I', c.column_name, r.table_schema, r.table_name)
 					INTO list_distinct_values;
 					INSERT INTO public.table_column_stats(table_name, column_name, total_rows, distinct_values, list_distinct_values)
                 	VALUES ( r.table_name, c.column_name, total_rows, distinct_count, list_distinct_values);
