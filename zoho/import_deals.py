@@ -10,6 +10,7 @@ import sys
 import os
 import pandas as pd
 import numpy as np
+import duckdb
 from psycopg2.extras import execute_values
 from psycopg2 import Error as Psycopg2Error
 from db_connection import connect_to_db
@@ -34,38 +35,8 @@ def process_dataframe(df):
     print(f"DataFrame shape: {df.shape}")
     print(f"Columns: {len(df.columns)}")
     
-    try:
-        # Ensure Id column is properly converted to int64 (preserves precision)
-        # Handle both numeric and string inputs, including scientific notation
-        if 'Id' in df.columns:
-            # Convert to string first to preserve exact values (handles large integers)
-            df['Id'] = df['Id'].astype(str)
-            # Convert to numeric, which handles scientific notation automatically
-            df['Id'] = pd.to_numeric(df['Id'], errors='coerce').astype('Int64')  # Nullable integer
-        else:
-            raise ValueError("Error: 'Id' column not found in CSV file. Please verify the CSV format.")
-        
-        # Handle boolean-like columns: convert false/true to 0/1
-        boolean_columns = ['via_angebote', 'Locked__s', 'AP_ist_Entscheider']
-        for col in boolean_columns:
-            if col in df.columns:
-                # Replace string values (case-insensitive): false -> 0, true -> 1
-                df[col] = df[col].replace({
-                    'false': 0,
-                    'False': 0,
-                    'FALSE': 0,
-                    'true': 1,
-                    'True': 1,
-                    'TRUE': 1
-                })
-                # Also handle boolean values if they exist
-                df[col] = df[col].replace({
-                    False: 0,
-                    True: 1
-                })
-                # Convert to numeric, keeping NaN as None
-                df[col] = pd.to_numeric(df[col], errors='coerce')
-        
+    try:        
+        df[['via_angebote', 'Locked__s', 'AP_ist_Entscheider']] = df[['via_angebote', 'Locked__s', 'AP_ist_Entscheider']].astype(float)
         return df
     except Exception as e:
         raise ValueError(f"Error processing DataFrame: {str(e)}")
@@ -121,6 +92,8 @@ def insert_data(conn, df):
 
 def main():
     """Main function to run the import process."""
+    duck = duckdb.connect()
+
     # Default CSV path
     csv_path = 'data/Deals (business opportunities) - Deals.csv'
     
@@ -162,15 +135,7 @@ def main():
         
         # Read CSV file directly with pandas
         print(f"Reading CSV file: {csv_path}")
-        try:
-            df = pd.read_csv(csv_path, low_memory=False)
-        except pd.errors.EmptyDataError:
-            raise ValueError(f"Error: CSV file is empty: {csv_path}")
-        except pd.errors.ParserError as e:
-            raise ValueError(f"Error parsing CSV file: {str(e)}\n"
-                           f"Please verify the CSV file is not corrupted.")
-        except Exception as e:
-            raise Exception(f"Error reading CSV file: {str(e)}")
+        df = duck.sql(f"select * from read_csv('{csv_path}')").df()
         
         # Process the DataFrame
         print("Processing DataFrame...")
