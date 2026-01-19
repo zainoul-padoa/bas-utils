@@ -8,6 +8,7 @@ import json
 # ==============
 ZOHO_DOMAIN = "https://www.zohoapis.eu"  # change to .eu, .in, .com.au if needed
 CLIENT_ID = '1000.UM9NBC0TBJ49IQXT7M6YLDP3OOL5AB'
+# For these two parameters, refer to 1Password (Padoa-integration-Bas)
 CLIENT_SECRET =  ''
 REFRESH_TOKEN = ""
 

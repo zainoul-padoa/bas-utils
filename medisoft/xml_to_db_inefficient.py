@@ -9,8 +9,6 @@ SCHEMA_NAME = "medisoft_new"
 # Connexion à la base de données
 conn = connection_alchemy.connect_to_db()
 
-print('HELLO HEY')
-
 for filename in os.listdir(XML_DIR):
     if not filename.endswith(".xml"):
         continue

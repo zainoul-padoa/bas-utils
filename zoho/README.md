@@ -31,6 +31,8 @@ These scripts import Deals data from a CSV file into a PostgreSQL database, and 
    pip install -r ../requirements.txt
    ```
 
+4. Update parameters in zohoCRM.py from 1Password (Padoa-integration-BAS)
+
 ## Refresh the whole Zoho database
 1. Go to project root directory
 ```bash
