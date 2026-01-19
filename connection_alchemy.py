@@ -16,12 +16,6 @@ DB_CONFIG = {
 	'user': os.getenv('DB_USER', 'postgres'),
 	'password': os.getenv('DB_PASSWORD', '')
 }
-
-# Target schema for files in data
-SCHEMA_NAME = 'zoho'
-
-# Path to data directory (from root)
-DATA_PATH = 'zoho/data'
 # ======================
 
 def connect_to_db(config: Optional[dict] = None) -> engine:

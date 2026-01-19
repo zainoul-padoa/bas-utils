@@ -8,8 +8,8 @@ import json
 # ==============
 ZOHO_DOMAIN = "https://www.zohoapis.eu"  # change to .eu, .in, .com.au if needed
 CLIENT_ID = '1000.UM9NBC0TBJ49IQXT7M6YLDP3OOL5AB'
-CLIENT_SECRET =  'adeb48f856682312a3e223119073c4b09e2ea15a24'
-REFRESH_TOKEN = "1000.c3f7aaf48e0006a124c2d685494de942.1d2c3ce0a12ed4b3ac731b8fce800451"
+CLIENT_SECRET =  ''
+REFRESH_TOKEN = ""
 
 ACCESS_TOKEN = None  # will be filled dynamically
 LIST_MODULES = [
