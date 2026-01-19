@@ -1,0 +1,7 @@
+load database
+     from sqlite://output.db
+     into postgresql://postgres:myPassWord@127.0.0.1:15437/medisoft?sslmode=allow
+
+ with include drop, create tables, create indexes, reset sequences, batch rows = 100, batch size = 1MB, batch concurrency = 64
+
+  set work_mem to '10000MB', maintenance_work_mem to '20000 MB';
