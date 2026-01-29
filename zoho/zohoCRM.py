@@ -2,15 +2,22 @@
 import time
 import requests
 import json
+import os
+
+from dotenv import load_dotenv
 
 # ==============
 # CONFIG
 # ==============
 ZOHO_DOMAIN = "https://www.zohoapis.eu"  # change to .eu, .in, .com.au if needed
 CLIENT_ID = '1000.UM9NBC0TBJ49IQXT7M6YLDP3OOL5AB'
-# For these two parameters, refer to 1Password (Padoa-integration-Bas)
-CLIENT_SECRET =  ''
-REFRESH_TOKEN = ""
+# For the two parameters above, refer to 1Password (Padoa-integration-Bas)
+# Add them to .env in the root directory of the project, as shown in .env.example
+# Load environment variables from .env file
+load_dotenv()
+
+CLIENT_SECRET = os.getenv('CLIENT_SECRET_ZOHO')
+REFRESH_TOKEN = os.getenv("REFRESH_TOKEN_ZOHO")
 
 ACCESS_TOKEN = None  # will be filled dynamically
 LIST_MODULES = [

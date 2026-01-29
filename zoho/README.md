@@ -5,6 +5,7 @@ These scripts import Deals data from a CSV file into a PostgreSQL database, and 
 ## Prerequisites
 
 1. Python 3.8 or higher
+2. Fill .env file in root directory of the project (REFRESH_TOKEN_ZOHO, CLIENT_SECRET_ZOHO)
 2. PostgreSQL database with the `zoho."Deals"` table created
 3. Required Python packages (install with `pip install -r ../requirements.txt`)
 
@@ -24,6 +25,8 @@ These scripts import Deals data from a CSV file into a PostgreSQL database, and 
      DB_NAME=your_database_name
      DB_USER=your_username
      DB_PASSWORD=your_password
+     CLIENT_SECRET_ZOHO=your_secret
+     REFRESH_TOKEN_ZOHO=your_token
      ```
 
 3. **Install dependencies:**
@@ -43,7 +46,7 @@ cd /Users/padoa/Desktop/BAS/bas-utils
 python3 -m zoho.zohoCRM
 ```
 
-3. Move the files into zoho/data
+3. Extract and move the files into zoho/data (Accounts, Contacts, Deals, Leads, Tasks)
 ```bash
 mv *csv zoho/data
 ```
