@@ -42,6 +42,9 @@ output.db
 merge_tables/output
 *.csv
 *.xlsx
+merge_tables/output
+*.csv
+*.xlsx
 
 gsheet-creds.json
 test_account_timeline.json
