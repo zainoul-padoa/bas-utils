@@ -36,15 +36,21 @@ def create_clean_account_name_macro(duck: duckdb.DuckDBPyConnection):
     """Create the clean_account_name macro for name cleaning."""
     duck.execute("""
         CREATE OR REPLACE MACRO clean_account_name(str) AS (
-            regexp_replace(
+            SELECT 
                 regexp_replace(
-                    lower(strip_accents(replace(str, '&#38;', ''))), 
-                    '\\b(llc|inc|ltd|corp|corporation|plc|gmbh)\\b', 
-                    '', 'g'
-                ), 
-                '[^a-z0-9]', 
-                '', 'g'
-            )
+                    regexp_replace(
+                        lower(
+                            strip_accents(
+                                replace(str, '&#38;', '')
+                            )
+                        ), 
+                        '(\\b(\\s|\\))+(gmbh|mbh|g?ag|ev|kg|kgaa|se|llp|ek|ohg|ug|inc|ltd|corp|plc|gemeinnutzige)\\b).*$',
+                        ''
+                    ),
+                    '[^a-z0-9]',
+                    '',
+                    'g'
+                )
         );
     """)
     print("✓ Created clean_account_name macro")

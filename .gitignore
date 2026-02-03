@@ -28,10 +28,13 @@ Thumbs.db
 
 # Jupyter Notebook
 .ipynb_checkpoints
-*.ipynb
 
 Archiv
 Archiv_old
 export.dump
 medisoft-updated/
 output.db
+
+merge_tables/output
+*.csv
+*.xlsx

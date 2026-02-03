@@ -3,7 +3,7 @@
 import duckdb
 import pandas as pd
 from postal.parser import parse_address
-from utils.address_utils import clean_german_road, split_and_clean_house_number
+from merge_tables.utils.address_utils import clean_german_road, split_and_clean_house_number
 
 
 def match_by_address(duck: duckdb.DuckDBPyConnection, table_name: str):
