@@ -1,0 +1,648 @@
+[
+  {
+    "done_by": {
+      "profile": {
+        "name": "Head of",
+        "id": "386758000000634245"
+      },
+      "name": "Isabell Siegmund",
+      "id": "386758000011881012",
+      "type__s": "regular user"
+    },
+    "related_record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "automation_details": {
+      "rule": {
+        "name": "Update_Opp_Anfahrt",
+        "id": "386758000011091115"
+      },
+      "type": "workflow_rule"
+    },
+    "record": {
+      "module": {
+        "api_name": "Deluge",
+        "id": null
+      },
+      "name": "Anfahrt der Opportunities ändern",
+      "id": "386758000011091110"
+    },
+    "audited_time": "2025-11-04T16:10:01+01:00",
+    "action": "function_executed",
+    "id": "386758000062478028",
+    "source": "workflow",
+    "field_history": null
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Head of",
+        "id": "386758000000634245"
+      },
+      "name": "Isabell Siegmund",
+      "id": "386758000011881012",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-11-04T16:09:59+01:00",
+    "action": "updated",
+    "id": "386758000062451052",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "Kundenummer",
+        "field_label": "Kundennummer",
+        "data_type": "text",
+        "_value": {
+          "new": "130002217",
+          "old": null
+        },
+        "id": "386758000008526123"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Deals",
+        "id": "386758000000000049"
+      },
+      "name": "Nußbeck Consulting GmbH - ArbMed_04-2026_1.500,-€",
+      "id": "386758000061709064"
+    },
+    "audited_time": "2025-10-21T09:39:10+02:00",
+    "action": "added",
+    "id": "386758000061709076",
+    "source": "crm_ui",
+    "field_history": null
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "automation_details": {
+      "rule": {
+        "name": "Update_Opp_Anfahrt",
+        "id": "386758000011091115"
+      },
+      "type": "workflow_rule"
+    },
+    "record": {
+      "module": {
+        "api_name": "Deluge",
+        "id": null
+      },
+      "name": "Anfahrt der Opportunities ändern",
+      "id": "386758000011091110"
+    },
+    "audited_time": "2025-10-21T09:37:14+02:00",
+    "action": "function_executed",
+    "id": "386758000061625042",
+    "source": "workflow",
+    "field_history": null
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-10-21T09:37:13+02:00",
+    "action": "updated",
+    "id": "386758000061709055",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "Datum_Vertragsbeginn",
+        "field_label": "Datum Vertragsbeginn",
+        "data_type": "date",
+        "_value": {
+          "new": "2026-04-01",
+          "old": "2026-01-01"
+        },
+        "id": "386758000010077074"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "automation_details": {
+      "rule": {
+        "name": "Update_Opp_Anfahrt",
+        "id": "386758000011091115"
+      },
+      "type": "workflow_rule"
+    },
+    "record": {
+      "module": {
+        "api_name": "Deluge",
+        "id": null
+      },
+      "name": "Anfahrt der Opportunities ändern",
+      "id": "386758000011091110"
+    },
+    "audited_time": "2025-10-21T09:35:32+02:00",
+    "action": "function_executed",
+    "id": "386758000061663037",
+    "source": "workflow",
+    "field_history": null
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-10-21T09:35:31+02:00",
+    "action": "updated",
+    "id": "386758000061709045",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "Employees",
+        "field_label": "Employees",
+        "data_type": "integer",
+        "_value": {
+          "new": "24",
+          "old": "22"
+        },
+        "id": "386758000000000403"
+      },
+      {
+        "api_name": "MA_Anzahl",
+        "field_label": "MA Anzahl",
+        "data_type": "formula",
+        "formula": {
+          "return_type": "double",
+          "dynamic": false,
+          "stop_compute_conditionally": false,
+          "assume_default": false
+        },
+        "_value": {
+          "new": 24,
+          "old": 22
+        },
+        "id": "386758000019221052"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "automation_details": {
+      "rule": {
+        "name": "Update_Opp_Anfahrt",
+        "id": "386758000011091115"
+      },
+      "type": "workflow_rule"
+    },
+    "record": {
+      "module": {
+        "api_name": "Deluge",
+        "id": null
+      },
+      "name": "Anfahrt der Opportunities ändern",
+      "id": "386758000011091110"
+    },
+    "audited_time": "2025-10-17T16:05:26+02:00",
+    "action": "function_executed",
+    "id": "386758000061676010",
+    "source": "workflow",
+    "field_history": null
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-10-17T16:05:24+02:00",
+    "action": "updated",
+    "id": "386758000061679015",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "Account_Status",
+        "field_label": "Account Status",
+        "data_type": "picklist",
+        "_value": {
+          "new": "Aktiv - betriebsspezifisch",
+          "old": "In Akquisition"
+        },
+        "id": "386758000008850087"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:51:24+02:00",
+    "action": "updated",
+    "id": "386758000054310012",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "Direkte_ArbMed",
+        "field_label": "Direkte ArbMed",
+        "data_type": "text",
+        "_value": {
+          "new": "5",
+          "old": null
+        },
+        "id": "386758000025227049"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:51:20+02:00",
+    "action": "updated",
+    "id": "386758000054310002",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "J_hrliche_Betreuungsstunden_ArbMed",
+        "field_label": "Jährliche Betreuungsstunden ArbMed",
+        "data_type": "text",
+        "_value": {
+          "new": "5",
+          "old": null
+        },
+        "id": "386758000000345486"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:51:17+02:00",
+    "action": "updated",
+    "id": "386758000054300992",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "Direkt_Indirekt",
+        "field_label": "Direkt/Indirekt",
+        "data_type": "picklist",
+        "_value": {
+          "new": "100 direkte Leistung",
+          "old": "70/30"
+        },
+        "id": "386758000028074841"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:51:15+02:00",
+    "action": "updated",
+    "id": "386758000054300982",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "J_hrliche_Betreuungsstunden_gesamt",
+        "field_label": "Jährliche Betreuungsstunden gesamt",
+        "data_type": "text",
+        "_value": {
+          "new": "5",
+          "old": null
+        },
+        "id": "386758000000345480"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:51:09+02:00",
+    "action": "updated",
+    "id": "386758000054300972",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "Vertragstyp_GB",
+        "field_label": "Vertragstyp bei GB",
+        "data_type": "picklist",
+        "_value": {
+          "new": "ArbMed",
+          "old": null
+        },
+        "id": "386758000027476904"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:51:01+02:00",
+    "action": "updated",
+    "id": "386758000054300962",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "zust_ndige_r_SiFa",
+        "field_label": "FaSi",
+        "data_type": "picklist",
+        "_value": {
+          "new": "Fasi (intern)",
+          "old": null
+        },
+        "id": "386758000018232146"
+      }
+    ]
+  },
+  {
+    "done_by": {
+      "profile": {
+        "name": "Agent Sales",
+        "id": "386758000000634191"
+      },
+      "name": "Sven Henning",
+      "id": "386758000000341639",
+      "type__s": "regular user"
+    },
+    "related_record": null,
+    "automation_details": null,
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:50:53+02:00",
+    "action": "updated",
+    "id": "386758000054300952",
+    "source": "crm_ui",
+    "field_history": [
+      {
+        "api_name": "zust_ndige_r_rztin_Arzt",
+        "field_label": "Ärztin/Arzt",
+        "data_type": "picklist",
+        "_value": {
+          "new": "Guido Pfalzer",
+          "old": null
+        },
+        "id": "386758000018232112"
+      }
+    ]
+  },
+  {
+    "done_by": null,
+    "related_record": null,
+    "automation_details": {
+      "rule": {
+        "name": "Convert pre-qualified Leads",
+        "id": "386758000008532597"
+      },
+      "type": "conversion",
+      "conversion": {
+        "record": {
+          "name": "Frank Hahn",
+          "id": "386758000054164001"
+        },
+        "module": {
+          "api_name": "Leads",
+          "id": "386758000000000043"
+        }
+      }
+    },
+    "record": {
+      "module": {
+        "api_name": "Accounts",
+        "id": "386758000000000045"
+      },
+      "name": "Nußbeck Consulting GmbH",
+      "id": "386758000054300816"
+    },
+    "audited_time": "2025-04-16T16:49:42+02:00",
+    "action": "added",
+    "id": "386758000054300835",
+    "source": "workflow",
+    "field_history": null
+  }
+]

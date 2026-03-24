@@ -34,25 +34,66 @@ def setup_temp_tables(duck: duckdb.DuckDBPyConnection):
 
 def create_clean_account_name_macro(duck: duckdb.DuckDBPyConnection):
     """Create the clean_account_name macro for name cleaning."""
+    # Original macro with German city names removal (commented out)
     duck.execute("""
         CREATE OR REPLACE MACRO clean_account_name(str) AS (
             SELECT 
                 regexp_replace(
                     regexp_replace(
-                        lower(
-                            strip_accents(
-                                replace(str, '&#38;', '')
-                            )
-                        ), 
-                        '(\\b(\\s|\\))+(gmbh|mbh|g?ag|ev|kg|kgaa|se|llp|ek|ohg|ug|inc|ltd|corp|plc|gemeinnutzige)\\b).*$',
-                        ''
+                        regexp_replace(
+                            lower(
+                                strip_accents(
+                                    replace(str, '&#38;', '')
+                                )
+                            ), 
+                            -- 1. Suffixes juridiques et tout ce qui suit
+                            '(\\b(\\s|\\))+(g?gmbh|mbh|g?ag|ev|kg|kgaa|se|llp|ek|ohg|ug|inc|ltd|corp|plc|gemeinnutzige)\\b).*$',
+                            ''
+                        ),
+                        -- 2. Villes allemandes et variantes (nettoyées par strip_accents et lower)
+                        -- L'ordre privilégie les noms composés (ex: frankfurt am main) avant les noms simples
+                        '\\b(' ||
+                        'berlin|potsdam|cottbus|' ||
+                        'dusseldorf|koln|cologne|bonn|dortmund|essen|duisburg|bochum|wuppertal|monchengladbach|gelsenkirchen|aachen|krefeld|oberhausen|leverkusen|neuss|viersen|' ||
+                        'stuttgart|karlsruhe|mannheim|freiburg|heidelberg|heilbronn|muenchen|munchen|munich|augsburg|nurnberg|nuremberg|regensburg|' ||
+                        'hamburg 1|hamburg|bremen|kiel|lubeck|flensburg|rostock|schwerin|' ||
+                        'frankfurt am main|frankfurt|wiesbaden|mainz|darmstadt|offenbach|hannover|braunschweig|wolfsburg|kassel|' ||
+                        'ueberregional|leipzig|dresden|chemnitz|magdeburg|halle|erfurt|' ||
+                        'germany' ||
+                        ')\\b',
+                        '',
+                        'g'
                     ),
+                    -- 3. Nettoyage final (caractères spéciaux et espaces doubles)
                     '[^a-z0-9]',
                     '',
                     'g'
                 )
         );
     """)
+
+    # Version without city names removal: juridical suffixes + final cleanup only
+    # duck.execute("""
+    #     CREATE OR REPLACE MACRO clean_account_name(str) AS (
+    #         SELECT 
+    #             regexp_replace(
+    #                 regexp_replace(
+    #                     lower(
+    #                         strip_accents(
+    #                             replace(str, '&#38;', '')
+    #                         )
+    #                     ),
+    #                     -- 1. Suffixes juridiques et tout ce qui suit
+    #                     '(\\b(\\s|\\))+(gmbh|mbh|g?ag|ev|kg|kgaa|se|llp|ek|ohg|ug|inc|ltd|corp|plc|gemeinnutzige)\\b).*$',
+    #                     ''
+    #                 ),
+    #                 -- 2. Nettoyage final (caractères spéciaux et espaces doubles)
+    #                 '[^a-z0-9]',
+    #                 '',
+    #                 'g'
+    #             )
+    #     );
+    #     """)
     print("✓ Created clean_account_name macro")
 
 

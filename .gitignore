@@ -1,6 +1,10 @@
 # Environment Variables
 .env
 
+# Playwright sessions (contain auth cookies) and real credentials
+samedi/scraping/sessions/
+samedi/scraping/config.json
+
 # CSV files in data folder
 zoho/data/*.csv
 
@@ -38,3 +42,5 @@ output.db
 merge_tables/output
 *.csv
 *.xlsx
+
+gsheet-creds.json
