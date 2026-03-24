@@ -42,6 +42,8 @@ output.db
 merge_tables/output
 *.csv
 *.xlsx
+
+gsheet-creds.json
 merge_tables/output
 *.csv
 *.xlsx
