@@ -22,7 +22,7 @@ REFRESH_TOKEN = os.getenv("REFRESH_TOKEN_ZOHO")
 ACCESS_TOKEN = None  # will be filled dynamically
 LIST_MODULES = [
                 "Leads", "Accounts", "Contacts", "Deals", "Campaigns",
-                "Tasks", 
+                "Tasks", "Attachments",
                 # "Cases", -> ça marche pas
                  "Events", "Calls", 
                 # "Solutions", -> ça marche pas
