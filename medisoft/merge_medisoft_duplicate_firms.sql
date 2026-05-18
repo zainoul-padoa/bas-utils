@@ -28,9 +28,22 @@ JOIN list_duplicates src ON src.name = dest.name AND src.kuerzel = dest.kuerzel 
 WHERE dest.rang = 1 AND src.rang > 1
 ORDER BY dest.rec_id;
 
+-- SAVES
+CREATE TABLE medisoft.table_firmenstruktur_save AS 
+SELECT * FROM medisoft.table_firmenstruktur  ;
+
+CREATE TABLE bas_firms.easybill_medisoft_save AS 
+SELECT * FROM bas_firms.easybill_medisoft ;
+
+CREATE TABLE bas_firms.cleaned_medisoft_save AS 
+SELECT * FROM bas_firms.cleaned_medisoft;
+
 
 DELETE FROM medisoft.table_firmenstruktur  
 WHERE rec_id IN (SELECT src_id FROM bas_firms.merge_medisoft);
+
+DELETE FROM bas_firms.cleaned_medisoft
+WHERE medisoft_id IN (SELECT src_id FROM bas_firms.merge_medisoft);
 
 
 -- to avoid losing data about Easybill x Medisoft match
