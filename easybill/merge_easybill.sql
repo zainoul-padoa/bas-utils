@@ -3,6 +3,7 @@
 
 -- tables to update : 
 -- bas_firms.easybill_medisoft
+-- zoho.Deals
 -- bas_firms.easybill_zoho
 -- bas_firms.full_basic_care
 -- bas_firms.basic_care_details
@@ -31,6 +32,9 @@ SELECT * FROM easybill.documents ;
 CREATE TABLE bas_firms.employer_users_save AS 
 SELECT * FROM bas_firms.employer_users ;
 
+CREATE TABLE zoho."Deals_save" AS 
+SELECT * FROM zoho."Deals";
+
 ---------------------------------------------------------------------------------------------------------
 -- EASYBILL_MEDISOFT
 -- if src_id is associated to NO Medisoft, we can delete the row, because dest_id will replace it
@@ -56,7 +60,7 @@ WHERE id IN (
     WHERE ec.merge_mother IS NOT NULL AND ec.merge_mother <> ec.easybill_id 
     AND dest.medisoft_id IS NULL
     ) ; 
--- 130000117 will be replace by 113010075
+-- em.id 130000117 will be replaced by em.id 113010075
 
 -- (2)
 -- 6 rows
@@ -72,16 +76,16 @@ WHERE easybill_id IN (
     ) ; 
 -- 130000090 will be replaced by 108040031
 
--- 6 rows
+-- 5 rows
 -- (3)
 DELETE FROM bas_firms.easybill_medisoft 
-WHERE easybill_id IN (
-    SELECT dest.easybill_id FROM bas_firms.easybill_clean ec 
-    JOIN bas_firms.easybill_medisoft dest ON dest.easybill_id = ec.merge_mother  
-    JOIN bas_firms.easybill_medisoft src ON src.easybill_id = ec.easybill_id 
+WHERE id IN (
+    SELECT dest.id FROM bas_firms.easybill_clean ec 
+    JOIN bas_firms.easybill_medisoft dest ON dest.easybill_id = ec.merge_mother
     WHERE ec.merge_mother IS NOT NULL AND ec.merge_mother <> ec.easybill_id 
     AND dest.medisoft_id IS NULL
-    )
+    ) 
+AND medisoft_id IS null
 ---------------------------------
 -- if src_id and dest_id are both associated to Medisoft
 -- we have 4 cases
@@ -99,6 +103,7 @@ GROUP BY dest.easybill_id ;
 -- in all cases, we update src easybill_id -> dest_id, so this will be done at the end for everybody (1)
 -- we will also increment for all null at the end (2)
 -- a) 1 dest_id - 1 src_id -> replace dest and src em.id with null, we'll increment it later, and update src easybill_id -> dest_id
+-- 2 rows
 UPDATE bas_firms.easybill_medisoft em2
 SET id = NULL  -- replace dest and src em.id with null
 WHERE id IN (
@@ -122,6 +127,7 @@ WHERE id IN (
 )
 
 -- b) 1 dest_id - N src_id : replace dest em.id with null, to be incremented, and update src easybill_id -> dest_id
+-- 1 row
 UPDATE bas_firms.easybill_medisoft em2
 SET id = NULL 
 WHERE id IN (
@@ -139,6 +145,7 @@ WHERE id IN (
 )
 
 -- c) N dest_id - 1 src_id : replace src em.id with null, to be incremented, and update src easybill_id -> dest_id
+-- 2 rows
 UPDATE bas_firms.easybill_medisoft em2
 SET id = NULL 
 WHERE id IN (
@@ -154,7 +161,7 @@ WHERE id IN (
     FROM cte JOIN bas_firms.easybill_clean ec ON ec.merge_mother = cte.easybill_id 
     JOIN bas_firms.easybill_medisoft em ON em.easybill_id = ec.easybill_id 
     WHERE ec.merge_mother <> ec.easybill_id 
-    and dest_cnt > 1 AND src_cnt = 1 -- 1 : 1
+    and dest_cnt > 1 AND src_cnt = 1 -- N : 1
 )
 
 -- a,b,c (1): update src em.easybill_id -> dest em.easybill_id (aka dest_id)
@@ -177,9 +184,11 @@ WHERE ec.merge_mother <> ec.easybill_id
 )
 
 -- (2) increment null values
-CREATE SEQUENCE bas_firms.easybill_merge_seq;
+-- CREATE SEQUENCE bas_firms.easybill_merge_seq;
+-- SET SEQUENCE VALUE TO MAX ID
+SELECT setval('bas_firms.easybill_merge_seq', 130007945); 
 UPDATE bas_firms.easybill_medisoft em 
-SET id = SELECT nextval('bas_firms.easybill_merge_seq')::text
+SET id = nextval('bas_firms.easybill_merge_seq')::text
 WHERE id IS NULL;
 -----------------------------------------------------------------------------------------------------------------
 
@@ -200,7 +209,7 @@ WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id
 -- in BOTH cases, we delete the row with src easybill_id from easybill_zoho
 
 -- a) update zoho.Deals, and replace zoho src with zoho dest, so that opportunities are linked on the dest easybill_id
--- 5 rows
+-- 85 rows
 UPDATE zoho."Deals" d
 SET d."Account_Name" = (
     SELECT dest.zoho_id -- replace zoho src with zoho dest
@@ -239,7 +248,7 @@ WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id )
 ;
 -- 1 row
 DELETE FROM bas_firms.basic_care_details WHERE mother_client_id IN (
-SELECT fbc.mother_client_id FROM bas_firms.basic_care_details bcd 
+SELECT bcd.mother_client_id FROM bas_firms.basic_care_details bcd 
 JOIN bas_firms.easybill_clean ec ON ec.easybill_id = bcd.mother_client_id 
 WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id )
 ;
@@ -273,7 +282,8 @@ WHERE c."Kontakt: Kundennummer" IN (
     FROM easybill.contacts src
     JOIN bas_firms.easybill_clean ec ON ec.easybill_id = src."Kontakt: Kundennummer"
     JOIN easybill.contacts dest ON dest."Kontakt: Kundennummer" = ec.merge_mother 
-    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id)
+    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id) ;
+
 -- address
 UPDATE easybill.contacts c 
 SET "Kontakt: Straße/Hausnummer" = (SELECT dest."Kontakt: Straße/Hausnummer"
@@ -287,7 +297,8 @@ WHERE c."Kontakt: Kundennummer" IN (
     FROM easybill.contacts src
     JOIN bas_firms.easybill_clean ec ON ec.easybill_id = src."Kontakt: Kundennummer"
     JOIN easybill.contacts dest ON dest."Kontakt: Kundennummer" = ec.merge_mother 
-    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id)
+    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id);
+
 -- post code
 UPDATE easybill.contacts c 
 SET "Kontakt: Postleitzahl"  = (SELECT dest."Kontakt: Postleitzahl"
@@ -301,7 +312,8 @@ WHERE c."Kontakt: Kundennummer" IN (
     FROM easybill.contacts src
     JOIN bas_firms.easybill_clean ec ON ec.easybill_id = src."Kontakt: Kundennummer"
     JOIN easybill.contacts dest ON dest."Kontakt: Kundennummer" = ec.merge_mother 
-    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id)
+    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id);
+
 -- city
 UPDATE easybill.contacts c 
 SET "Kontakt: Ort"   = (SELECT dest."Kontakt: Ort"
@@ -315,7 +327,7 @@ WHERE c."Kontakt: Kundennummer" IN (
     FROM easybill.contacts src
     JOIN bas_firms.easybill_clean ec ON ec.easybill_id = src."Kontakt: Kundennummer"
     JOIN easybill.contacts dest ON dest."Kontakt: Kundennummer" = ec.merge_mother 
-    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id)
+    WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id);
 
 -- (2) replace src easybill_id with dest easybill_id
 UPDATE easybill.contacts c2 SET "Kontakt: Kundennummer" = (SELECT ec.easybill_id FROM bas_firms.easybill_clean ec WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id
