@@ -20,23 +20,14 @@ def extract_codes(combination):
 
     return ' | '.join(liste_extracted)
 
-df = pd.read_excel('visit_combination_overall.xlsx')
-
-df = df.drop('EN (AI-generated)',axis=1)
+#df = pd.read_excel('visit_combination_overall.xlsx')
+df = pd.read_csv('visit_rostock_brut.csv')
+#df = df.drop('EN (AI-generated)',axis=1)
 df['combination'] = df['combination'].apply(extract_codes)
 
 df2=df.groupby('combination',as_index=False).agg(
-    {'How many combinations together':'first',
-    'standard combination or ad-hoc?':'first',
+    { 
     'count':'sum',
-    'Price with doubles':'first',
-    'Price without doubles': 'first',
-    'Absolute difference':'first',
-    '% difference': 'first',
-    'Price overall with doubles':'first',
-    'Price overall without doubles':'first',
-    'Absolute difference Overall':'first',
-    'Comment': 'first'
     })
 
-df2.to_excel('visit_combination_overall_2.xlsx')
+df2.to_excel('visit_rostock_cleaned.xlsx')
