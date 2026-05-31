@@ -7,6 +7,18 @@ UPDATE medisoft.table_untersuchungen
 SET u_datum = NULL 
 WHERE u_datum = '0000-00-00T00:00:00';
 
+UPDATE medisoft.table_untersuchungen 
+SET datum_naechste_unt = NULL 
+WHERE datum_naechste_unt = '0000-00-00T00:00:00';
+
+UPDATE medisoft.table_ap_historie 
+SET datum_bis = NULL 
+WHERE datum_bis = '0000-00-00T00:00:00';
+
+UPDATE medisoft.table_ap_historie 
+SET datum_von = NULL 
+WHERE datum_von = '0000-00-00T00:00:00';
+
 
 ----- Manage employee without company
 -- when visit has a company, we take the most recent one as company
