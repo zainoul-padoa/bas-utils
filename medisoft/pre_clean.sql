@@ -1,4 +1,12 @@
 -- PRE-CLEAN MEDISOFT
+UPDATE medisoft.table_beschaeftigte 
+SET geburtsdatum = NULL 
+WHERE geburtsdatum = '0000-00-00T00:00:00';
+
+UPDATE medisoft.table_untersuchungen 
+SET u_datum = NULL 
+WHERE u_datum = '0000-00-00T00:00:00';
+
 
 ----- Manage employee without company
 -- when visit has a company, we take the most recent one as company
