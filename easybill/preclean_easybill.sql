@@ -16,3 +16,19 @@ UPDATE easybill.contacts SET "Kontakt: Telefon 2" = null WHERE "Kontakt: Telefon
 UPDATE easybill.contacts SET "Kontakt: Mobiltelefon" = null WHERE "Kontakt: Mobiltelefon" = '';
 UPDATE easybill.contacts SET "Kontakt: E-Mail" = null WHERE "Kontakt: E-Mail" = '';
 UPDATE easybill.contacts SET "Kontakt: Weitere E-Mails" = null WHERE "Kontakt: Weitere E-Mails" = '';
+
+-- update basic_care child id for deduplication
+update bas_firms.full_basic_care fbc
+set child_client_id = sub.suffixed_id
+from (
+  select
+    ctid,
+    case
+      when count(*) over (partition by mother_client_id) > 1
+      then mother_client_id || row_number() over (partition by mother_client_id)
+      else mother_client_id
+    end as suffixed_id
+  from bas_firms.full_basic_care
+) sub
+where fbc.ctid = sub.ctid;
+
