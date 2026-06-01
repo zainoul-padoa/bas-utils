@@ -32,3 +32,16 @@ from (
 ) sub
 where fbc.ctid = sub.ctid;
 
+-- update full_basic_care with offer_type when not provided. Deducted from sold hours
+update bas_firms.full_basic_care f
+set betreuungsart = case
+    when coalesce(nullif(nullif(replace(replace(f.davon_amed, ' ', ''), ',', '.'), '-'), '')::numeric, 0) > 0
+     and coalesce(nullif(nullif(replace(replace(f.davon_asi , ' ', ''), ',', '.'), '-'), '')::numeric, 0) > 0 then 'AMAS'
+    when coalesce(nullif(nullif(replace(replace(f.davon_amed, ' ', ''), ',', '.'), '-'), '')::numeric, 0) > 0 then 'AMed'
+    when coalesce(nullif(nullif(replace(replace(f.davon_asi , ' ', ''), ',', '.'), '-'), '')::numeric, 0) > 0 then 'ASi'
+end
+where (f.betreuungsart is null or btrim(f.betreuungsart) = '')
+  and (
+        coalesce(nullif(nullif(replace(replace(f.davon_amed, ' ', ''), ',', '.'), '-'), '')::numeric, 0) > 0
+     or coalesce(nullif(nullif(replace(replace(f.davon_asi , ' ', ''), ',', '.'), '-'), '')::numeric, 0) > 0
+  );
