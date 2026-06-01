@@ -19,6 +19,11 @@ UPDATE medisoft.table_ap_historie
 SET datum_von = NULL 
 WHERE datum_von = '0000-00-00T00:00:00';
 
+-- Engerix-B -> Engerix B
+UPDATE table_impfstoff 
+SET kuerzel = 'Engerix B'
+WHERE rec_id = '00_8L700QDJUM';
+
 
 ----- Manage employee without company
 -- when visit has a company, we take the most recent one as company
