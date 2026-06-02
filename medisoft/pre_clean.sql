@@ -24,6 +24,11 @@ UPDATE table_impfstoff
 SET kuerzel = 'Engerix B'
 WHERE rec_id = '00_8L700QDJUM';
 
+-- remove space at the end of kuerzel
+UPDATE table_firmenstruktur 
+SET kuerzel = substr(kuerzel,1,length(kuerzel)-1)
+WHERE kuerzel LIKE '% '
+
 
 ----- Manage employee without company
 -- when visit has a company, we take the most recent one as company
