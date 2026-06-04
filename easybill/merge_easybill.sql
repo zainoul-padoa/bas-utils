@@ -223,6 +223,32 @@ WHERE easybill_id IN ('126000005','130000867') ;
 DELETE FROM bas_firms.easybill_medisoft WHERE id IN ('130005353', '130006374') ;
 
 UPDATE bas_firms.easybill_medisoft em SET id = '126000005' WHERE id = '130005352' ; 
+
+--Check if 1E x 1M then Id = Easybill_ID
+SELECT easybill_id FROM bas_firms.easybill_medisoft 
+GROUP BY easybill_id 
+HAVING count(*) = 1 
+EXCEPT 
+SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id = easybill_id
+
+SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id = easybill_id
+EXCEPT 
+SELECT easybill_id FROM bas_firms.easybill_medisoft 
+GROUP BY easybill_id 
+HAVING count(*) = 1 
+
+-- Check if 1E x n M then Id <> Easybill_Id
+SELECT easybill_id FROM bas_firms.easybill_medisoft 
+GROUP BY easybill_id 
+HAVING count(*) > 1 
+EXCEPT 
+SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id <> easybill_id
+
+SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id <> easybill_id
+EXCEPT
+SELECT easybill_id FROM bas_firms.easybill_medisoft 
+GROUP BY easybill_id 
+HAVING count(*) > 1 
 -----------------------------------------------------------------------------------------------------------------
 
 -- EASYBILL_ZOHO
