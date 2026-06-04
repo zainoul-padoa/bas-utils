@@ -270,7 +270,7 @@ WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id
 -- a) update zoho.Deals, and replace zoho src with zoho dest, so that opportunities are linked on the dest easybill_id
 -- 85 rows
 UPDATE zoho."Deals" d
-SET d."Account_Name" = (
+SET "Account_Name" = (
     SELECT dest.zoho_id -- replace zoho src with zoho dest
     FROM bas_firms.easybill_zoho src 
     JOIN bas_firms.easybill_clean ec ON ec.easybill_id = src.easybill_id 
