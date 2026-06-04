@@ -70,5 +70,7 @@ for filename in os.listdir(XML_DIR):
         cursor.execute(insert_sql, values)
     conn.commit()
     print(f"[OK] Table '{table_name}' : {len(rows)} lignes insérées.")
+    os.remove(path)
+    print(f"[OK] File '{filename}' supprimé.")
 conn.close()
 print("\n:white_check_mark: Base de données recréée avec succès :", DB_FILE)
