@@ -190,6 +190,39 @@ SELECT setval('bas_firms.easybill_merge_seq', 130007945);
 UPDATE bas_firms.easybill_medisoft em 
 SET id = nextval('bas_firms.easybill_merge_seq')::text
 WHERE id IS NULL;
+
+-- id = easybill_id mais ils ont + d'un match
+SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id = easybill_id
+except 
+SELECT easybill_id FROM bas_firms.easybill_medisoft 
+GROUP BY easybill_id 
+HAVING count(*) = 1 ; 
+
+-- they should not have id = easybill_id
+-- we need to increment them 
+-- 8 rows
+UPDATE bas_firms.easybill_medisoft 
+SET id = nextval('bas_firms.easybill_merge_seq')::text
+WHERE id = easybill_id
+AND easybill_id IN ( SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id = easybill_id
+except 
+SELECT easybill_id FROM bas_firms.easybill_medisoft 
+GROUP BY easybill_id 
+HAVING count(*) = 1 ) ;
+
+-- clean it further
+SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE medisoft_id IS NULL 
+INTERSECT 
+SELECT easybill_id FROM bas_firms.easybill_medisoft 
+GROUP BY easybill_id 
+HAVING count(*) > 1;
+
+SELECT * FROM bas_firms.easybill_medisoft em 
+WHERE easybill_id IN ('126000005','130000867') ; 
+
+DELETE FROM bas_firms.easybill_medisoft WHERE id IN ('130005353', '130006374') ;
+
+UPDATE bas_firms.easybill_medisoft em SET id = '126000005' WHERE id = '130005352' ; 
 -----------------------------------------------------------------------------------------------------------------
 
 -- EASYBILL_ZOHO
