@@ -24,6 +24,12 @@ UPDATE table_impfstoff
 SET kuerzel = 'Engerix B'
 WHERE rec_id = '00_8L700QDJUM';
 
+-- MMR- Priorix -> Priorix
+UPDATE table_impfstoff ti 
+SET kuerzel= 'Priorix' 
+WHERE rec_id = '00_8OR00RYKY2' AND kuerzel = 'MMR- Priorix';
+
+
 -- remove space at the end of kuerzel
 UPDATE table_firmenstruktur 
 SET kuerzel = substr(kuerzel,1,length(kuerzel)-1)
