@@ -97,3 +97,7 @@ WHERE inactive AND ebetrieb_id IS NULL;
 
 -- end manage employee without company
 --------------------------------------------------------------
+
+
+-- Now please check this: 
+-- every medisoft_id should be linked to 1 easybill_id only
