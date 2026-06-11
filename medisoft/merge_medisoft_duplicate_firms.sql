@@ -57,6 +57,9 @@ USING bas_firms.easybill_medisoft em2
 WHERE em.id > em2.id 
 AND em.easybill_id = em2.easybill_id AND em.medisoft_id = em2.medisoft_id
 
+--TODO: 
+-- update em.id where there is only 1 row for an Easybill_ID
+
 
 -- replace in each relevant table containing ebetrieb_id 
 
