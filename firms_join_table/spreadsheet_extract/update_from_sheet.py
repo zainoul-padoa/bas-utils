@@ -121,6 +121,130 @@ def read_spreadsheet_data(duck, spreadsheet_id: str, sheet_name: str) -> str:
     return table_name
 
 
+def upsert_cleaned_medisoft(duck_sheets, duck_pg, pg_prefix: str = "pg.bas_firms"):
+    """
+    UPSERT cleaned_medisoft by reading from all city sheets.
+
+    City sheets: berlin, dusseldorf, frankfurt, hamburg, kiel, koln, munchen, rostock, stuttgart, viersen, other
+    Skip: dashboard, easybill_clients_list
+    """
+    spreadsheet_id = "1vB84YG3eBVJVAQsv8VNe2K_TTE8bZ1I9gnwidGAvyXE"
+    target_table = f"{pg_prefix}.cleaned_medisoft"
+
+    city_sheets = [
+        "berlin", "dusseldorf", "frankfurt", "hamburg", "kiel",
+        "koln", "munchen", "rostock", "stuttgart", "viersen", "other"
+    ]
+
+    # Read and union all city sheets
+    union_blocks = []
+    for city_sheet in city_sheets:
+        union_blocks.append(f"""
+            SELECT
+                medisoft_id,
+                name,
+                kuerzel,
+                pfad,
+                TRY_CAST(nb_patients AS INTEGER) AS nb_patients,
+                last_exam_date,
+                addresse AS address,
+                CASE WHEN LOWER("has easybill connection") IN ('true', '1', 'yes') THEN TRUE
+                     WHEN LOWER("has easybill connection") IN ('false', '0', 'no') THEN FALSE
+                     ELSE NULL END AS has_easybill_connection,
+                CASE WHEN LOWER("migrate as inactive") IN ('true', '1', 'yes') THEN TRUE
+                     WHEN LOWER("migrate as inactive") IN ('false', '0', 'no') THEN FALSE
+                     ELSE NULL END AS migrate_as_inactive,
+                CASE WHEN LOWER("no migration") IN ('true', '1', 'yes') THEN TRUE
+                     WHEN LOWER("no migration") IN ('false', '0', 'no') THEN FALSE
+                     ELSE NULL END AS no_migration,
+                CASE WHEN LOWER("Selbstzahler") IN ('true', '1', 'yes') THEN TRUE
+                     WHEN LOWER("Selbstzahler") IN ('false', '0', 'no') THEN FALSE
+                     ELSE NULL END AS selbstzahler,
+                '{_sql_literal(city_sheet)}' AS city
+            FROM read_gsheet(
+                '{_sql_literal(spreadsheet_id)}',
+                sheet='{_sql_literal(city_sheet)}',
+                all_varchar=true
+            )
+        """)
+
+    union_sql = " UNION ALL BY NAME ".join(union_blocks)
+
+    # Create merged table
+    merged_table = "medisoft_all_cities"
+    duck_sheets.execute(f"""
+        CREATE OR REPLACE TABLE {_sql_identifier(merged_table)} AS
+        {union_sql}
+    """)
+
+    n_merged = duck_sheets.sql(f"SELECT count(*) FROM {_sql_identifier(merged_table)}").fetchone()[0]
+    print(f"  ✓ Merged {n_merged} records from {len(city_sheets)} city sheets")
+
+    # Export to CSV
+    merged_csv = Path("/tmp/medisoft_all_cities.csv")
+    duck_sheets.execute(f"COPY {_sql_identifier(merged_table)} TO '{_sql_literal(str(merged_csv))}' (HEADER, DELIMITER ',')")
+    print(f"  ✓ Exported to {merged_csv}")
+
+    # Load into PostgreSQL and UPSERT
+    try:
+        path_sql = _sql_literal(str(merged_csv))
+        temp_table = f"{pg_prefix}.temp_medisoft"
+
+        # Load CSV into temp table
+        duck_pg.execute(f"""
+            CREATE OR REPLACE TABLE {temp_table} AS
+            SELECT * FROM read_csv('{path_sql}', header=true, all_varchar=true)
+        """)
+
+        n_temp = duck_pg.sql(f"SELECT count(*) FROM {temp_table}").fetchone()[0]
+        print(f"  ✓ Loaded {n_temp} records into temporary table")
+
+        # UPSERT with transaction (delete matching medisoft_ids, then insert)
+        duck_pg.execute("BEGIN;")
+
+        deleted = duck_pg.execute(
+            f"""DELETE FROM {target_table}
+               WHERE medisoft_id IN (SELECT DISTINCT medisoft_id FROM {temp_table})"""
+        ).rowcount
+        print(f"  ✓ Deleted {deleted} existing records")
+
+        # Insert with proper type casting
+        inserted = duck_pg.execute(f"""
+            INSERT INTO {target_table}
+            (medisoft_id, name, kuerzel, pfad, nb_patients, last_exam_date,
+             address, has_easybill_connection, migrate_as_inactive, no_migration,
+             selbstzahler, city)
+            SELECT
+                medisoft_id, name, kuerzel, pfad,
+                COALESCE(TRY_CAST(nb_patients AS INTEGER), 0),
+                last_exam_date, address,
+                COALESCE(TRY_CAST(has_easybill_connection AS BOOLEAN), FALSE),
+                COALESCE(TRY_CAST(migrate_as_inactive AS BOOLEAN), FALSE),
+                COALESCE(TRY_CAST(no_migration AS BOOLEAN), FALSE),
+                COALESCE(TRY_CAST(selbstzahler AS BOOLEAN), FALSE),
+                city
+            FROM {temp_table}
+        """).rowcount
+        print(f"  ✓ Inserted {inserted} new records")
+
+        duck_pg.execute("COMMIT;")
+
+        # Clean up
+        duck_pg.execute(f"DROP TABLE IF EXISTS {temp_table}")
+
+    except Exception as e:
+        try:
+            duck_pg.execute("ROLLBACK;")
+        except:
+            pass
+        print(f"  ✗ ERROR: {e}")
+        raise
+
+    # Verify
+    final_count = duck_pg.sql(f"SELECT count(*) FROM {target_table}").fetchone()[0]
+    print(f"  ✓ Final row count in {target_table}: {final_count}")
+
+
 def discover_table_schemas(duck, schema: str = "pg.bas_firms"):
     """Discover and display schemas of target tables."""
     print("\n" + "=" * 80)
@@ -228,24 +352,23 @@ def upsert_easybill_medisoft(duck, source_table: str, target_schema: str = "pg.b
     print(f"  ✓ Final row count in {target_table}: {final_count}")
 
 
-def upsert_cleaned_medisoft(duck, source_table: str, target_schema: str = "pg.bas_firms"):
-    """
-    UPSERT cleaned_medisoft table.
-    Requires discovering the target schema first.
-    """
-    target_table = f"{target_schema}.cleaned_medisoft"
 
-    print(f"\nDiscovering {target_table} schema...")
-    schema_result = duck.sql(f"DESCRIBE {target_table}")
-    schema_cols = [row[0] for row in schema_result.fetchall()]
-    print(f"  Columns: {schema_cols}")
 
-    # For now, log that we need more info
-    print(f"  NOTE: cleaned_medisoft UPSERT logic TBD - need to confirm:")
-    print(f"    - Primary key for matching")
-    print(f"    - Which columns should be updated")
-    print(f"    - Data transformation needed")
-    # This will be implemented based on actual schema
+def discover_table_schemas(duck, schema: str = "pg.bas_firms"):
+    """Discover and display schemas of target tables."""
+    print("\n" + "=" * 80)
+    print("TARGET TABLE SCHEMAS")
+    print("=" * 80)
+
+    for table_name in ["easybill_medisoft", "cleaned_medisoft"]:
+        full_name = f"{schema}.{table_name}"
+        print(f"\n{full_name}:")
+        schema_result = duck.sql(f"DESCRIBE {full_name}")
+        for row in schema_result.fetchall():
+            print(f"  {row[0]:<25} {row[1]}")
+
+        count = duck.sql(f"SELECT count(*) FROM {full_name}").fetchone()[0]
+        print(f"  (Current row count: {count})")
 
 
 def main() -> None:
@@ -389,14 +512,12 @@ def main() -> None:
     final_count = duck.sql(f"SELECT count(*) FROM {target_table}").fetchone()[0]
     print(f"  ✓ Final row count in {target_table}: {final_count}")
 
+    # UPSERT cleaned_medisoft from multiple city sheets
+    print("\nUPSERTing cleaned_medisoft from city sheets...")
+    upsert_cleaned_medisoft(duck_sheets, duck, args.pg_prefix)
+
     print("\n" + "=" * 80)
-    print("UPDATE SUMMARY")
-    print("=" * 80)
-    before_count_medisoft = duck.sql(
-        f"SELECT count(*) FROM {args.pg_prefix}.cleaned_medisoft"
-    ).fetchone()[0]
-    print(f"easybill_medisoft: {final_count} rows")
-    print(f"cleaned_medisoft: {before_count_medisoft} rows (no changes - TODO: populate from sheet)")
+    print("✓ UPDATE COMPLETE!")
     print("=" * 80)
 
 
