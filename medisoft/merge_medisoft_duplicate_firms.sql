@@ -61,7 +61,35 @@ AND em.easybill_id = em2.easybill_id AND em.medisoft_id = em2.medisoft_id
 
 --TODO: 
 -- update em.id where there is only 1 row for an Easybill_ID
+-- i.e change ID -> Easybill_ID when 1E x 1M if ID <> Easybill_ID
+  
+-- first have a look : 
+SELECT em.*, f.mandant FROM bas_firms.easybill_medisoft em 
+LEFT JOIN table_firmenstruktur f ON f.rec_id = em.medisoft_id 
+WHERE id <> easybill_id -- id different from easybill, where it should not, because we are in 1E x 1M case
+AND easybill_id IN ( -- list of easybill_id having only 1 child
+SELECT easybill_id
+FROM bas_firms.easybill_medisoft
+WHERE medisoft_id IS NOT NULL 
+GROUP BY easybill_id
+HAVING count(*) = 1 )
+AND lower(f.mandant) <> 'rostock' -- Rostock already in prod, we don't change them
 
+-- now update
+UPDATE bas_firms.easybill_medisoft 
+SET id = easybill_id 
+WHERE easybill_id IN (
+  SELECT easybill_id FROM bas_firms.easybill_medisoft em 
+  JOIN table_firmenstruktur f ON f.rec_id = em.medisoft_id 
+  WHERE id <> easybill_id -- id different from easybill, where it should not, because we are in 1E x 1M case
+  AND easybill_id IN ( -- list of easybill_id having only 1 child
+  SELECT easybill_id
+  FROM bas_firms.easybill_medisoft
+  WHERE medisoft_id IS NOT NULL 
+  GROUP BY easybill_id
+  HAVING count(*) = 1 )
+  AND lower(f.mandant) <> 'rostock'
+  )
 
 -- replace in each relevant table containing ebetrieb_id 
 
