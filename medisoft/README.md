@@ -50,15 +50,22 @@ These are all tables that have a column referencing to firm's medisoft ID
 
 Move only these to Archiv folder.
 
+#### Apply next section steps 
+Apply steps from 
+Generate the SQLite database
+until 
+Data is loaded in schema "public"
+
+This will inject the tables 
+
 #### Pre-clean 
 Apply merge medisoft
 ```
 medisoft/merge_medisoft_duplicate_firms.sql
 ```
 
-#### Apply next section steps (from Generate the SQLite Database)
-
 #### Generate Easybill_Medisoft delta
+Now we can generate the Excel sheet for BAS for them to match the new Medisoft to Easybill firms.
 
 #### Go to the next section for the rest of xml files, excluding the ones above already injected
 
