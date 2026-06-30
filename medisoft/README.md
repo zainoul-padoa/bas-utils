@@ -55,7 +55,12 @@ Apply merge medisoft
 ```
 medisoft/merge_medisoft_duplicate_firms.sql
 ```
+
+#### Apply next section steps (from Generate the SQLite Database)
+
 #### Generate Easybill_Medisoft delta
+
+#### Go to the next section for the rest of xml files, excluding the ones above already injected
 
 ### Generate the SQLite database
 ```bash
