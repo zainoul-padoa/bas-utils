@@ -60,13 +60,13 @@ PGSSLMODE=allow pgloader --verbose db.load
 - Rename medisoft to medisoft_2026_xx and public to medisoft (with DBeaver or Datagrip)
 - Create a new public schema
 
-#### Post-clean
+### Post-clean
 
-### Generate IDs for independent
+#### Generate IDs for independent
 
-### Generate IDs for new Medisoft (children or no_easybill_match)
+#### Generate IDs for new Medisoft (children or no_easybill_match)
 
-### Update cleaned_medisoft
+#### Update cleaned_medisoft
 
 ## What the script does
 
