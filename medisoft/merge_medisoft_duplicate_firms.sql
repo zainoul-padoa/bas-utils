@@ -5,6 +5,7 @@
 -- we merge on the medisoft_id which has the most employees
 -- i put coalesce(name, kuerzel) because name is sometimes null, ex. bipG Hannover's name is once null and another time not null, creating two groups whereas it is the same
 -- coalesce are needed in joins for address and nullable fields
+/* already applied
 CREATE TABLE bas_firms.merge_medisoft AS 
 WITH duplicates AS (
 SELECT tf.kuerzel , COALESCE(tf.name, tf.kuerzel) AS name , tf.strasse , tf.plz , ort, lower(mandant) AS mandant, count(*) FROM medisoft.table_firmenstruktur tf 
@@ -27,6 +28,7 @@ SELECT src.rec_id src_id, dest.rec_id dest_id FROM list_duplicates dest
 JOIN list_duplicates src ON src.name = dest.name AND src.kuerzel = dest.kuerzel AND COALESCE(src.strasse,'') = COALESCE(dest.strasse,'') AND COALESCE(src.plz,'') = COALESCE(dest.plz,'') AND COALESCE(src.ort,'') = COALESCE(dest.ort,'') AND src.mandant = dest.mandant 
 WHERE dest.rang = 1 AND src.rang > 1
 ORDER BY dest.rec_id;
+*/
 
 -- SAVES
 CREATE TABLE medisoft.table_firmenstruktur_save AS 
