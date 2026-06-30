@@ -13,7 +13,8 @@ SELECT b.rec_id , nextval('bas_firms.medisoft_independent') FROM medisoft.table_
 LEFT JOIN medisoft.table_firmenstruktur f ON f.rec_id = b.ebetrieb_id 
 WHERE lower(f.kuerzel) like '%selbstzahler%'
 AND b.rec_id NOT IN (SELECT medisoft_id FROM bas_firms.easybill_medisoft where medisoft_id is not null) -- if it is already in easybill_medisoft, don't insert it again please!
-
+AND lower(f.mandant) <> 'rostock' -- Rostock is already in prod!
+  
 -- employee without company
 ---- GENERATE INDEPENT FIRM SOURCE ID
 -- get max id
