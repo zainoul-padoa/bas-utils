@@ -56,13 +56,14 @@ Generate the SQLite database
 until 
 Data is loaded in schema "public"
 
-This will inject the tables 
+This will inject the tables in the new medisoft schema.
 
-#### Pre-clean 
+#### Merge Medisoft
 Apply merge medisoft
 ```
 medisoft/merge_medisoft_duplicate_firms.sql
 ```
+This will merge src_id to dest_id in merge_medisoft table.
 
 #### Generate Easybill_Medisoft delta
 Now we can generate the Excel sheet for BAS for them to match the new Medisoft to Easybill firms.
