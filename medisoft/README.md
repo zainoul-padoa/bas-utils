@@ -52,18 +52,22 @@ Move only these to Archiv folder.
 
 #### Apply next section steps 
 Apply steps from 
-Generate the SQLite database
+**Generate the SQLite database**
 until 
-Data is loaded in schema "public"
+**Data is loaded in schema "public"**
 
-This will inject the tables in the new medisoft schema.
+This will inject the tables mentioned above in the new medisoft schema.
 
 #### Merge Medisoft
-Apply merge medisoft
+First make sure all the cases of Medisoft firms that need to be merged are injected in merge_medisoft table. 
+Cases here should be in the table: 
+https://docs.google.com/spreadsheets/d/1gxx7gNpKEUwHV3wInDt1cGfr9-4VKa9mHgUA2x83K2c/edit?pli=1&gid=971735290#gid=971735290
+
+Here is the script to apply the merge:
 ```
 medisoft/merge_medisoft_duplicate_firms.sql
 ```
-This will merge src_id to dest_id in merge_medisoft table.
+This will merge src_id to dest_id that are in merge_medisoft table.
 
 #### Generate Easybill_Medisoft delta
 Now we can generate the Excel sheet for BAS for them to match the new Medisoft to Easybill firms.
@@ -85,11 +89,25 @@ PGSSLMODE=allow pgloader --verbose db.load
 
 ### Post-clean
 
+#### Update cleaned_medisoft
+help Adrien
+
 #### Generate IDs for independent
+Generate firm IDs in easybill_medisoft table for independent employees. 
+
+```
+medisoft/independent_id.sql
+```
 
 #### Generate IDs for new Medisoft (children or no_easybill_match)
+For new firms coming from delta easybill_medisoft match, we need to either generate an ID if Easybill has multiple children, or set ID to Easybill_ID else. 
 
-#### Update cleaned_medisoft
+For firms without Easybill match, we just generate an ID. 
+
+All is done here:
+```
+medisoft/generate_easybill_medisoft_id.sql
+```
 
 ## What the script does
 
