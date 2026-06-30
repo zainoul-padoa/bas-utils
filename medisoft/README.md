@@ -45,6 +45,7 @@ First we inject only these xml:
 - Erbrachte_Werte.xml
 - Ap_Historie.xml
 - Impfungen.xml
+
 These are all tables that have a column referencing to firm's medisoft ID
 
 Move only these to Archiv folder.
