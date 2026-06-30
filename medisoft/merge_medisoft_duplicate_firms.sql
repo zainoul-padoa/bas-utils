@@ -34,10 +34,10 @@ ORDER BY dest.rec_id;
 CREATE TABLE medisoft.table_firmenstruktur_save AS 
 SELECT * FROM medisoft.table_firmenstruktur  ;
 
-CREATE TABLE bas_firms.easybill_medisoft_save AS 
-SELECT * FROM bas_firms.easybill_medisoft ;
+CREATE TABLE bas_firms.easybill_medisoft_backup_20260704HHMMSS AS 
+  select * from bas_firms.easybill_medisoft;
 
-CREATE TABLE bas_firms.cleaned_medisoft_save AS 
+CREATE TABLE bas_firms.cleaned_medisoft_backup_20260704HHMMSS AS 
 SELECT * FROM bas_firms.cleaned_medisoft;
 
 
