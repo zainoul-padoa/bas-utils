@@ -34,6 +34,21 @@ These scripts transform the xml files into a sqlite database, and then we import
 
 ## Usage 
 
+### Firm linked resources first
+First we inject only these xml:
+- Firmenstruktur.xml
+- Beschaeftigte.xml
+- Untersuchungen.xml
+
+#### Move xml to Archiv folder
+
+#### Generate ID for new firms
+- independent
+- other
+
+#### Apply merge
+
+
 ### Generate the SQLite database
 ```bash
 python3 xml_to_db.py
