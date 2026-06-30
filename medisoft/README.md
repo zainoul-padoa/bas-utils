@@ -41,11 +41,20 @@ First we inject only these xml:
 - Firmenstruktur.xml
 - Beschaeftigte.xml
 - Untersuchungen.xml
+- Kartei.xml
+- Erbrachte_Werte.xml
+- Ap_Historie.xml
+- Impfungen.xml
+These are all tables that have a column referencing to firm's medisoft ID
+
+Move only these to Archiv folder.
 
 #### Pre-clean 
 Apply merge medisoft
-
-
+```
+medisoft/merge_medisoft_duplicate_firms.sql
+```
+#### Generate Easybill_Medisoft delta
 
 ### Generate the SQLite database
 ```bash
