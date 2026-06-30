@@ -34,19 +34,17 @@ These scripts transform the xml files into a sqlite database, and then we import
 
 ## Usage 
 
-### Firm linked resources first
+### Prio to Firm-linked resources first
+
+#### Move xml to Archiv folder
 First we inject only these xml:
 - Firmenstruktur.xml
 - Beschaeftigte.xml
 - Untersuchungen.xml
 
-#### Move xml to Archiv folder
+#### Pre-clean 
+Apply merge medisoft
 
-#### Generate ID for new firms
-- independent
-- other
-
-#### Apply merge
 
 
 ### Generate the SQLite database
@@ -61,6 +59,14 @@ PGSSLMODE=allow pgloader --verbose db.load
 ### Data is loaded in schema "public"
 - Rename medisoft to medisoft_2026_xx and public to medisoft (with DBeaver or Datagrip)
 - Create a new public schema
+
+#### Post-clean
+
+### Generate IDs for independent
+
+### Generate IDs for new Medisoft (children or no_easybill_match)
+
+### Update cleaned_medisoft
 
 ## What the script does
 
