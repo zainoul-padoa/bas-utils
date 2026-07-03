@@ -397,3 +397,25 @@ JOIN bas_firms.easybill_clean ec ON ec.easybill_id = c."Kontakt: Kundennummer"
 WHERE ec."merge" AND ec.merge_mother <> ec.easybill_id )
 ;
 ------------------------------------------------------------------------------------------------------------
+
+
+
+-- tous les cas où 1 Easybill_ID : N Medisoft, il faut générer un ID
+
+-- max id 
+SELECT id FROM bas_firms.easybill_medisoft
+WHERE id IS NOT NULL
+ORDER BY id DESC;
+
+-- set sequence to that value
+SELECT setval('bas_firms.easybill_merge_seq', <max>);
+
+-- change id to have id <> easybill_id
+UPDATE bas_firms.easybill_medisoft 
+SET id = nextval('bas_firms.easybill_merge_seq')::text
+WHERE id IN (
+    SELECT id FROM bas_firms.easybill_medisoft WHERE id = easybill_id 
+    INTERSECT 
+    SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id <> easybill_id
+)
+AND id = easybill_id
