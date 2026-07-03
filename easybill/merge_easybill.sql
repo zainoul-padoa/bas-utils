@@ -427,3 +427,11 @@ INTERSECT
 SELECT easybill_id FROM bas_firms.easybill_medisoft em WHERE em.medisoft_id IS NOT NULL ;
 
 -- Delete ?
+
+
+-- si medisoft_id est null 
+-- et que easybill_id <> id
+UPDATE bas_firms.easybill_medisoft em 
+SET id = easybill_id 
+WHERE medisoft_id IS NULL 
+AND id <> easybill_id
