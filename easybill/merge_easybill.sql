@@ -418,4 +418,12 @@ WHERE id IN (
     INTERSECT 
     SELECT easybill_id FROM bas_firms.easybill_medisoft WHERE id <> easybill_id
 )
-AND id = easybill_id
+AND id = easybill_id ; 
+
+
+-- Une ligne Easybill - Medisoft null et une autre Easybill - Medisoft non-null
+SELECT easybill_id FROM bas_firms.easybill_medisoft em WHERE em.medisoft_id IS NULL
+INTERSECT 
+SELECT easybill_id FROM bas_firms.easybill_medisoft em WHERE em.medisoft_id IS NOT NULL ;
+
+-- Delete ?
