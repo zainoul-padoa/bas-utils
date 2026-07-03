@@ -79,8 +79,8 @@ WHERE easybill_id IN (
 -- 5 rows
 -- (3)
 DELETE FROM bas_firms.easybill_medisoft 
-WHERE id IN (
-    SELECT dest.id FROM bas_firms.easybill_clean ec 
+WHERE easybill_id IN (
+    SELECT  dest.easybill_id   FROM bas_firms.easybill_clean ec 
     JOIN bas_firms.easybill_medisoft dest ON dest.easybill_id = ec.merge_mother
     WHERE ec.merge_mother IS NOT NULL AND ec.merge_mother <> ec.easybill_id 
     AND dest.medisoft_id IS NULL
