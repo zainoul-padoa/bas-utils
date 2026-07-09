@@ -1,7 +1,7 @@
 """Database connection management."""
 
 import duckdb
-from config import load_config, get_db_config
+from merge_tables.config import load_config, get_db_config
 
 
 def connect_to_postgres_via_duckdb():
