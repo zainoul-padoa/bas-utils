@@ -16,6 +16,9 @@ SET id = nextval('bas_firms.easybill_merge_seq')
 ALTER TABLE bas_firms.uberregional_entity  
 ADD COLUMN padoa_final_id text;
 
+ALTER TABLE ue_id 
+RENAME COLUMN padoa_id TO old_padoa_id;
+
 -- before any modification, backup
 CREATE TABLE bas_firms.uberregional_entity_backup_20260706_1328 AS 
 SELECT * FROM bas_firms.uberregional_entity;
@@ -23,7 +26,7 @@ SELECT * FROM bas_firms.uberregional_entity;
 
 -- give generated ID to the couple mother_id - padoa_id
 UPDATE bas_firms.uberregional_entity ue
-SET padoa_final_id = (SELECT uei.id FROM ue_id uei WHERE uei.mother_id = ue.mother_id AND uei.padoa_id = ue.padoa_id)
+SET padoa_final_id = (SELECT uei.id FROM ue_id uei WHERE uei.mother_id = ue.mother_id AND uei.old_padoa_id = ue.padoa_id)
 ; 
 
 -- oops we generated an ID when mother_id = padoa_id too, we shouldn't have
