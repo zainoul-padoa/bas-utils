@@ -35,16 +35,16 @@ def _load_medisoft(duck, pg_table: str, csv_path: Path) -> None:
         duck.execute(f"TRUNCATE TABLE {pg_table};")
         duck.execute(
             f"""
-INSERT INTO {pg_table} (easybill_id, medisoft_id)
-SELECT
-    easybill_kundennummer,
-    NULLIF(TRIM(medisoft_id), '')
-FROM read_csv(
-    '{path_sql}',
-    header = true,
-    all_varchar = true
-);
-"""
+            INSERT INTO {pg_table} (easybill_id, medisoft_id)
+            SELECT
+                easybill_kundennummer,
+                NULLIF(TRIM(medisoft_id), '')
+            FROM read_csv(
+                '{path_sql}',
+                header = true,
+                all_varchar = true
+            );
+            """
         )
         duck.execute("COMMIT;")
     except Exception:
@@ -59,16 +59,16 @@ def _load_zoho(duck, pg_table: str, csv_path: Path) -> None:
         duck.execute(f"TRUNCATE TABLE {pg_table};")
         duck.execute(
             f"""
-INSERT INTO {pg_table} (easybill_id, zoho_id)
-SELECT
-    easybill_kundennummer,
-    NULLIF(TRIM(zoho_id), '')
-FROM read_csv(
-    '{path_sql}',
-    header = true,
-    all_varchar = true
-);
-"""
+            INSERT INTO {pg_table} (easybill_id, zoho_id)
+            SELECT
+                easybill_kundennummer,
+                NULLIF(TRIM(zoho_id), '')
+            FROM read_csv(
+                '{path_sql}',
+                header = true,
+                all_varchar = true
+            );
+            """
         )
         duck.execute("COMMIT;")
     except Exception:

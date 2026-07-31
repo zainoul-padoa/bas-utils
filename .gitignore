@@ -44,3 +44,7 @@ merge_tables/output
 *.xlsx
 
 gsheet-creds.json
+outlook/
+*.parquet
+*.txt
+

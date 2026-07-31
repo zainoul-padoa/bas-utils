@@ -461,12 +461,12 @@ def main() -> None:
     duck_sheets.execute(f"COPY flattened_data TO '{flat_csv}' (HEADER, DELIMITER ',')")
     print(f"  ✓ Exported flattened data to {flat_csv}")
 
-    # Load into PostgreSQL via duck connection
+    # Load into PostgreSQL and UPSERT
     print("\nUPSERTing easybill_medisoft...")
     target_table = f"{args.pg_prefix}.easybill_medisoft"
 
     try:
-        # Load CSV directly into PostgreSQL temp table
+        # Load CSV into temp table (all in postgres database now)
         path_sql = _sql_literal(str(flat_csv))
         temp_table = f"{args.pg_prefix}.temp_updates"
 
@@ -479,21 +479,24 @@ def main() -> None:
         n_flat = duck.sql(f"SELECT count(*) FROM {temp_table}").fetchone()[0]
         print(f"  ✓ Loaded {n_flat} unique pairs")
 
-        # UPSERT with transaction (all in postgres database now)
+        # UPSERT with transaction
+        # Delete matching (easybill_id, medisoft_id) pairs, then insert all new pairs
         duck.execute("BEGIN;")
 
-        # Delete existing entries
+        # Delete existing entries matching BOTH easybill_id AND medisoft_id
         deleted = duck.execute(
-            f"DELETE FROM {target_table} WHERE easybill_id IN (SELECT DISTINCT easybill_id FROM {temp_table})"
+            f"""DELETE FROM {target_table}
+               WHERE (easybill_id, medisoft_id) IN
+                     (SELECT DISTINCT easybill_id, medisoft_id FROM {temp_table})"""
         ).rowcount
-        print(f"  ✓ Deleted {deleted} existing rows")
+        print(f"  ✓ Deleted {deleted} existing pairs")
 
         # Insert new data
         inserted = duck.execute(
             f"""INSERT INTO {target_table} (easybill_id, medisoft_id)
                SELECT easybill_id, medisoft_id FROM {temp_table}"""
         ).rowcount
-        print(f"  ✓ Inserted {inserted} new rows")
+        print(f"  ✓ Inserted {inserted} new pairs")
 
         duck.execute("COMMIT;")
 
