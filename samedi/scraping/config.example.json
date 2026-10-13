@@ -1,0 +1,14 @@
+[
+  {
+    "city": "Rostock",
+    "username": "admin-rostock",
+    "password": "your-password-here",
+    "max_patients": 500
+  },
+  {
+    "city": "Berlin",
+    "username": "admin-berlin",
+    "password": "your-password-here",
+    "max_patients": 1200
+  }
+]
