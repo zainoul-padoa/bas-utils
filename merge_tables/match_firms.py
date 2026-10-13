@@ -10,8 +10,8 @@ This script:
 Matching functions can be dynamically added to the process.
 """
 
-from config import load_config, get_table_name, get_enabled_functions
-from db import (
+from merge_tables.config import load_config, get_table_name, get_enabled_functions
+from merge_tables.db import (
     connect_to_postgres_via_duckdb,
     create_table_firms_zoho,
     setup_temp_tables,
@@ -19,7 +19,7 @@ from db import (
     ensure_all_firms_in_table,
     print_summary
 )
-from matchers import (
+from merge_tables.matchers import (
     setup_default_matching_functions,
     run_matching_functions,
     MATCHING_FUNCTIONS

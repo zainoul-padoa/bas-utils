@@ -2,11 +2,15 @@
 
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
 
 def load_config():
     """Load environment variables from .env file."""
-    load_dotenv("../.env")
+    # Try to load from project root (one level up from merge_tables/)
+    project_root = Path(__file__).parent.parent
+    env_file = project_root / ".env"
+    load_dotenv(env_file)
 
 
 def get_table_name() -> str:
