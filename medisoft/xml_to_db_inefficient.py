@@ -1,13 +1,14 @@
 import os
 import xml.etree.ElementTree as ET
-import sqlite3
+import connection_alchemy
 # === CONFIGURATION ===
-XML_DIR = "Archiv"   # répertoire des fichiers XML
+XML_DIR = "./medisoft/Archiv"   # répertoire des fichiers XML
 DB_FILE = "output.db"           # fichier SQLite (modifiable)
+SCHEMA_NAME = "medisoft_new"
 # ======================
 # Connexion à la base de données
-conn = sqlite3.connect(DB_FILE)
-cursor = conn.cursor()
+conn = connection_alchemy.connect_to_db()
+
 for filename in os.listdir(XML_DIR):
     if not filename.endswith(".xml"):
         continue
@@ -23,6 +24,7 @@ for filename in os.listdir(XML_DIR):
         children = list(root)
         if children and all(len(list(c)) > 0 for c in children):
             rows = children
+    table_name = SCHEMA_NAME + '.' + table_name
     # === CAS XML VIDE ===
     if not rows:
         print(f"[INFO] {filename}: aucun enregistrement trouvé. Création de la table vide '{table_name}'.")
@@ -37,9 +39,8 @@ for filename in os.listdir(XML_DIR):
             create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([f'{c} TEXT' for c in cols_table])});"
         else:
             # table sans colonnes explicites
-            create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY AUTOINCREMENT);"
-        cursor.execute(create_sql)
-        conn.commit()
+            create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} (id SERIAL PRIMARY KEY);"
+        conn.execute(create_sql)
         continue  # passe au fichier suivant
     # === CAS NORMAL (XML NON VIDE) ===
     # Colonnes à partir de la première ligne
@@ -47,7 +48,7 @@ for filename in os.listdir(XML_DIR):
     cols_table = [elem.tag for elem in first_row]
     # Création de la table si non existante
     create_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([f'{c} TEXT' for c in cols_table])});"
-    cursor.execute(create_sql)
+    conn.execute(create_sql)
     # Insertion de chaque ligne
     for row in rows:
         values = []
@@ -58,17 +59,13 @@ for filename in os.listdir(XML_DIR):
             # Rajout d'une nouvelle colonne si besoin
             if child.tag not in cols_table:
                 alter_sql = f"ALTER TABLE {table_name} ADD COLUMN {child.tag} TEXT"
-                cursor.execute(alter_sql)
+                conn.execute(alter_sql)
                 cols_table.append(child.tag)
             values.append(child.text)
         placeholders = ",".join(["?"] * len(cols_insert))
-        print(len(values))
-        print('and')
-        print(len(cols_insert))
-        print(table_name)
         insert_sql = f"INSERT INTO {table_name} ({', '.join(cols_insert)}) VALUES ({placeholders})"
-        cursor.execute(insert_sql, values)
-    conn.commit()
+        insert_sql = insert_sql.replace("?","'{}'").format(*values)
+        conn.execute(insert_sql)
     print(f"[OK] Table '{table_name}' : {len(rows)} lignes insérées.")
 conn.close()
 print("\n:white_check_mark: Base de données recréée avec succès :", DB_FILE)
