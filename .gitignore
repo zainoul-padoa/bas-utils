@@ -43,4 +43,5 @@ merge_tables/output
 *.csv
 *.xlsx
 
-gsheet-creds.jsontest_account_timeline.json
+gsheet-creds.json
+test_account_timeline.json
