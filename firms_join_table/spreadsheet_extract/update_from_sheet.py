@@ -352,8 +352,24 @@ def upsert_easybill_medisoft(duck, source_table: str, target_schema: str = "pg.b
     print(f"  ✓ Final row count in {target_table}: {final_count}")
 
 
+def upsert_cleaned_medisoft(duck, source_table: str, target_schema: str = "pg.bas_firms"):
+    """
+    UPSERT cleaned_medisoft table.
+    Requires discovering the target schema first.
+    """
+    target_table = f"{target_schema}.cleaned_medisoft"
 
+    print(f"\nDiscovering {target_table} schema...")
+    schema_result = duck.sql(f"DESCRIBE {target_table}")
+    schema_cols = [row[0] for row in schema_result.fetchall()]
+    print(f"  Columns: {schema_cols}")
 
+    # For now, log that we need more info
+    print(f"  NOTE: cleaned_medisoft UPSERT logic TBD - need to confirm:")
+    print(f"    - Primary key for matching")
+    print(f"    - Which columns should be updated")
+    print(f"    - Data transformation needed")
+    # This will be implemented based on actual schema
 def discover_table_schemas(duck, schema: str = "pg.bas_firms"):
     """Discover and display schemas of target tables."""
     print("\n" + "=" * 80)
@@ -517,6 +533,13 @@ def main() -> None:
     upsert_cleaned_medisoft(duck_sheets, duck, args.pg_prefix)
 
     print("\n" + "=" * 80)
+    print("UPDATE SUMMARY")
+    print("=" * 80)
+    before_count_medisoft = duck.sql(
+        f"SELECT count(*) FROM {args.pg_prefix}.cleaned_medisoft"
+    ).fetchone()[0]
+    print(f"easybill_medisoft: {final_count} rows")
+    print(f"cleaned_medisoft: {before_count_medisoft} rows (no changes - TODO: populate from sheet)")
     print("✓ UPDATE COMPLETE!")
     print("=" * 80)
 
