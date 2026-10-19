@@ -75,7 +75,7 @@ def create_clean_account_name_macro(duck: duckdb.DuckDBPyConnection):
     # Version without city names removal: juridical suffixes + final cleanup only
     # duck.execute("""
     #     CREATE OR REPLACE MACRO clean_account_name(str) AS (
-    #         SELECT 
+    #         SELECT
     #             regexp_replace(
     #                 regexp_replace(
     #                     lower(
